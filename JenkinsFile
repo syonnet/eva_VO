@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    stages {
+        
+
+        stage('Copia de Archivos') {
+            steps {
+                script {
+                    def robocopyExitCode = bat(script: 'robocopy dist/ C:\\eva_VO_C /E ^& exit %ERRORLEVEL%', returnStatus: true)
+
+                    echo "robocopy exit code: ${robocopyExitCode}"
+
+                    if (robocopyExitCode > 3) {
+                        echo 'Error en la copia de archivos usando Robocopy.'
+                        currentBuild.result = 'FAILURE'
+                    } else {
+                        echo 'Copia de archivos exitosa.'
+                    }
+                }
+            }
+        }
+
+        stage('Enviar Correo desde Script Python') {
+            steps {
+                script {
+                    bat '''
+                        
+                        C:\\Users\\RSS-MSI\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\eva_VO\\send_email.py
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline ejecutado exitosamente. ¡Construcción y copia de archivos exitosas!'
+        }
+        failure {
+            echo 'El pipeline ha fallado. Revisar los registros para mas detalles.'
+        }
+    }
+}
