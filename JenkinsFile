@@ -2,12 +2,13 @@ pipeline {
     agent any
 
     stages {
-        
-
         stage('Copia de Archivos') {
             steps {
                 script {
-                    bat(script: "robocopy ${WORKSPACE}\\eva_VO/ %USERPROFILE%\\eva_VO_C /E ^& exit %ERRORLEVEL%", returnStatus: true)
+                    def sourceDir = "${WORKSPACE}\\eva_VO"
+                    def destinationDir = "C:\\eva_VO_C"
+
+                    def robocopyExitCode = bat(script: "robocopy ${sourceDir} ${destinationDir} /E ^& exit %ERRORLEVEL%", returnStatus: true)
 
                     echo "robocopy exit code: ${robocopyExitCode}"
 
