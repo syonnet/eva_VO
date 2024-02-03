@@ -2,13 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Instalación') {
-            steps {
-                script {
-                    bat 'npm install'
-                }
-            }
-        }
+        
 
         stage('Copia de Archivos') {
             steps {
