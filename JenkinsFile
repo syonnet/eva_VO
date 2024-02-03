@@ -7,7 +7,7 @@ pipeline {
         stage('Copia de Archivos') {
             steps {
                 script {
-                    def robocopyExitCode = bat(script: 'robocopy eva_VO/ C:\\eva_VO_C /E ^& exit %ERRORLEVEL%', returnStatus: true)
+                    bat(script: "robocopy ${WORKSPACE}\\eva_VO/ %USERPROFILE%\\eva_VO_C /E ^& exit %ERRORLEVEL%", returnStatus: true)
 
                     echo "robocopy exit code: ${robocopyExitCode}"
 
@@ -20,7 +20,6 @@ pipeline {
                 }
             }
         }
-
         stage('Enviar Correo desde Script Python') {
             steps {
                 script {
